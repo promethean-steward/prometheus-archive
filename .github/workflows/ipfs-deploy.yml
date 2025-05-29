@@ -1,4 +1,4 @@
-name: Deploy to IPFS + Update Gandi DNSLink
+name: Deploy to IPFS + Update Cloudflare DNSLink
 
 on:
   push:
@@ -20,24 +20,24 @@ jobs:
           secret_key: ${{ secrets.W3_PRINCIPAL }}
           proof: ${{ secrets.W3_PROOF }}
 
-      - name: Update DNSLink (_dnslink) at Gandi
+      - name: Update Cloudflare DNSLink TXT Record
         run: |
           CID=${{ steps.w3up.outputs.cid }}
-          DOMAIN=${{ secrets.GANDI_DOMAIN }}
-          API="https://api.gandi.net/v5/livedns/domains/$DOMAIN/records/_dnslink/TXT"
-          JSON="{\"rrset_values\": [\"dnslink=/ipfs/$CID\"]}"
-          curl -s -X PUT "$API" \
-            -H "Authorization: Bearer ${{ secrets.GANDI_API_KEY }}" \
-            -H "Content-Type: application/json" \
-            -d "$JSON"
+          ZONE_ID=${{ secrets.CLOUDFLARE_ZONE_ID }}
+          RECORD_NAME=${{ secrets.CLOUDFLARE_TXT_NAME }}
+          RECORD=$(curl -s -X GET "https://api.cloudflare.com/client/v4/zones/$ZONE_ID/dns_records?type=TXT&name=$RECORD_NAME" \
+            -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
+            -H "Content-Type: application/json")
 
-      - name: Update DNSLink (_dnslink.www) at Gandi
-        run: |
-          CID=${{ steps.w3up.outputs.cid }}
-          DOMAIN=${{ secrets.GANDI_DOMAIN }}
-          API="https://api.gandi.net/v5/livedns/domains/$DOMAIN/records/_dnslink.www/TXT"
-          JSON="{\"rrset_values\": [\"dnslink=/ipfs/$CID\"]}"
-          curl -s -X PUT "$API" \
-            -H "Authorization: Bearer ${{ secrets.GANDI_API_KEY }}" \
+          RECORD_ID=$(echo $RECORD | jq -r '.result[0].id')
+
+          UPDATE_PAYLOAD=$(jq -n \
+            --arg name "$RECORD_NAME" \
+            --arg content "dnslink=/ipfs/$CID" \
+            '{type: "TXT", name: $name, content: $content, ttl: 120}')
+
+          curl -X PUT "https://api.cloudflare.com/client/v4/zones/$ZONE_ID/dns_records/$RECORD_ID" \
+            -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
             -H "Content-Type: application/json" \
-            -d "$JSON"
+            --data "$UPDATE_PAYLOAD"
+
