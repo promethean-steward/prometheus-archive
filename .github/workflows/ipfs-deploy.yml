@@ -14,30 +14,97 @@ jobs:
 
       - name: Upload to Storacha (IPFS)
         uses: storacha/add-to-web3@v3
-        id: w3up
+        id: ipfs_upload
         with:
           path_to_add: './site'
           secret_key: ${{ secrets.W3_PRINCIPAL }}
           proof: ${{ secrets.W3_PROOF }}
 
-      - name: Update Cloudflare DNSLink TXT Record
+      - name: Get Cloudflare IPFS Record ID
+        id: get_dnslink_record_id
         run: |
-          CID=${{ steps.w3up.outputs.cid }}
-          ZONE_ID=${{ secrets.CLOUDFLARE_ZONE_ID }}
-          RECORD_NAME=${{ secrets.CLOUDFLARE_TXT_NAME }}
-          RECORD=$(curl -s -X GET "https://api.cloudflare.com/client/v4/zones/$ZONE_ID/dns_records?type=TXT&name=$RECORD_NAME" \
-            -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
-            -H "Content-Type: application/json")
+          RESPONSE=$(curl -s -X GET \
+          "https://api.cloudflare.com/client/v4/zones/${{ secrets.CLOUDFLARE_ZONE_ID }}/dns_records?type=TXT&name=${{ secrets.CLOUDFLARE_IPFS_RECORD }}" \
+          -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
+          -H "Content-Type: application/json")
 
-          RECORD_ID=$(echo $RECORD | jq -r '.result[0].id')
+          echo "$RESPONSE" | jq .
+          SUCCESS=$(echo "$RESPONSE" | jq -r '.success')
 
-          UPDATE_PAYLOAD=$(jq -n \
-            --arg name "$RECORD_NAME" \
-            --arg content "dnslink=/ipfs/$CID" \
-            '{type: "TXT", name: $name, content: $content, ttl: 120}')
+          if [ "$SUCCESS" != "true" ]; then
+            echo "❌ Cloudflare record lookup failed!"
+            exit 1
+          else
+            echo "✅ Cloudflare Record lookup succeeded!"
+          fi
 
-          curl -X PUT "https://api.cloudflare.com/client/v4/zones/$ZONE_ID/dns_records/$RECORD_ID" \
-            -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
-            -H "Content-Type: application/json" \
-            --data "$UPDATE_PAYLOAD"
+          RECORD_ID=$(echo "$RESPONSE" | jq -r '.result[0].id')
+          echo "record_id=$RECORD_ID" >> $GITHUB_OUTPUT
+
+      - name: Update Cloudflare IPFS Record
+        run: |
+          RESPONSE=$(curl -X PUT \
+          "https://api.cloudflare.com/client/v4/zones/${{ secrets.CLOUDFLARE_ZONE_ID }}/dns_records/${{ steps.get_dnslink_record_id.outputs.record_id }}" \
+          -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
+          -H "Content-Type: application/json" \
+          -d '{
+            "type": "TXT",
+            "name": "${{ secrets.CLOUDFLARE_IPFS_RECORD }}",
+            "content": "\"dnslink=/ipfs/${{ steps.ipfs_upload.outputs.cid }}\"",
+            "ttl": 120
+          }')
+
+          echo "$RESPONSE" | jq .
+          SUCCESS=$(echo "$RESPONSE" | jq -r '.success')
+
+          if [ "$SUCCESS" != "true" ]; then
+            echo "❌ Cloudflare DNS update failed!"
+            exit 1
+          else
+            echo "✅ Cloudflare DNS update succeeded!"
+          fi
+
+      - name: Get Cloudflare IPFS WWW Record ID
+        id: get_dnslink_www_record_id
+        run: |
+          RESPONSE=$(curl -s -X GET \
+          "https://api.cloudflare.com/client/v4/zones/${{ secrets.CLOUDFLARE_ZONE_ID }}/dns_records?type=TXT&name=${{ secrets.CLOUDFLARE_IPFS_WWW_RECORD }}" \
+          -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
+          -H "Content-Type: application/json")
+
+          echo "$RESPONSE" | jq .
+          SUCCESS=$(echo "$RESPONSE" | jq -r '.success')
+
+          if [ "$SUCCESS" != "true" ]; then
+            echo "❌ Cloudflare record lookup failed!"
+            exit 1
+          else
+            echo "✅ Cloudflare Record lookup succeeded!"
+          fi
+
+          RECORD_ID=$(echo "$RESPONSE" | jq -r '.result[0].id')
+          echo "record_id=$RECORD_ID" >> $GITHUB_OUTPUT
+
+      - name: Update Cloudflare IPFS WWW Record
+        run: |
+          RESPONSE=$(curl -X PUT \
+          "https://api.cloudflare.com/client/v4/zones/${{ secrets.CLOUDFLARE_ZONE_ID }}/dns_records/${{ steps.get_dnslink_www_record_id.outputs.record_id }}" \
+          -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
+          -H "Content-Type: application/json" \
+          -d '{
+            "type": "TXT",
+            "name": "${{ secrets.CLOUDFLARE_IPFS_WWW_RECORD }}",
+            "content": "\"dnslink=/ipfs/${{ steps.ipfs_upload.outputs.cid }}\"",
+            "ttl": 120
+          }')
+
+          echo "$RESPONSE" | jq .
+          SUCCESS=$(echo "$RESPONSE" | jq -r '.success')
+
+          if [ "$SUCCESS" != "true" ]; then
+            echo "❌ Cloudflare DNS update failed!"
+            exit 1
+          else
+            echo "✅ Cloudflare DNS update succeeded!"
+          fi
 
