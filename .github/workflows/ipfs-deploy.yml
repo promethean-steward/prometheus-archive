@@ -1,0 +1,28 @@
+name: Deploy to IPFS via Storacha
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout site files
+        uses: actions/checkout@v3
+
+      - name: Upload to Storacha (IPFS)
+        uses: storacha/add-to-web3@v3
+        id: w3up
+        with:
+          path_to_add: '.'
+          secret_key: ${{ secrets.W3_PRINCIPAL }}
+          proof: ${{ secrets.W3_PROOF }}
+        
+        # use the outputs in subsequent steps
+        # "bafkreicysg23kiwv34eg2d7qweipxwosdo2py4ldv42nbauguluen5v6am"
+        - run: echo ${{ steps.w3up.outputs.cid }}
+        
+        # "https://bafkreicysg23kiwv34eg2d7qweipxwosdo2py4ldv42nbauguluen5v6am.ipfs.w3s.link"
+        - run: echo ${{ steps.w3up.outputs.url }}
