@@ -1,4 +1,4 @@
-name: Deploy to IPFS via Storacha
+name: Deploy to IPFS + Update Gandi DNSLink
 
 on:
   push:
@@ -19,10 +19,25 @@ jobs:
           path_to_add: './site'
           secret_key: ${{ secrets.W3_PRINCIPAL }}
           proof: ${{ secrets.W3_PROOF }}
-        
-      # use the outputs in subsequent steps
-      - name: New CID
-        run: echo ${{ steps.w3up.outputs.cid }}
-        
-      - name: New url
-        run: echo ${{ steps.w3up.outputs.url }}
+
+      - name: Update DNSLink (_dnslink) at Gandi
+        run: |
+          CID=${{ steps.w3up.outputs.cid }}
+          DOMAIN=${{ secrets.GANDI_DOMAIN }}
+          API="https://api.gandi.net/v5/livedns/domains/$DOMAIN/records/_dnslink/TXT"
+          JSON="{\"rrset_values\": [\"dnslink=/ipfs/$CID\"]}"
+          curl -s -X PUT "$API" \
+            -H "Authorization: Bearer ${{ secrets.GANDI_API_KEY }}" \
+            -H "Content-Type: application/json" \
+            -d "$JSON"
+
+      - name: Update DNSLink (_dnslink.www) at Gandi
+        run: |
+          CID=${{ steps.w3up.outputs.cid }}
+          DOMAIN=${{ secrets.GANDI_DOMAIN }}
+          API="https://api.gandi.net/v5/livedns/domains/$DOMAIN/records/_dnslink.www/TXT"
+          JSON="{\"rrset_values\": [\"dnslink=/ipfs/$CID\"]}"
+          curl -s -X PUT "$API" \
+            -H "Authorization: Bearer ${{ secrets.GANDI_API_KEY }}" \
+            -H "Content-Type: application/json" \
+            -d "$JSON"
