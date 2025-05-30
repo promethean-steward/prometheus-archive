@@ -16,7 +16,7 @@ jobs:
         uses: storacha/add-to-web3@v3
         id: ipfs_upload
         with:
-          path_to_add: './  '
+          path_to_add: '*'
           secret_key: ${{ secrets.W3_PRINCIPAL }}
           proof: ${{ secrets.W3_PROOF }}
 
