@@ -1,38 +1,36 @@
-# Core Manifest
+# 🧾 Prometheus Core Manifest
 
-This manifest lists the major directory domains and key documents in the Prometheus archive.
+This manifest tracks and describes every core file in the Prometheus system. It serves as a civic ledger and index of foundational principles, doctrines, and operational baselines.
 
 ---
 
-## 🧭 Core
-- `core_manifest.md`
-- `core_synthesis.md`
-- `civic_accountability.md`
-- `final-form-doctrine.md`
-- `README.md`
-- `minutes/`
+## 📁 Document Registry
 
-## 📘 Ethos
-- `ethos_manifest.md`
-- `freedom_stack.md`
-- `design_by_fire.md`
-- `civic_design.md`
-- `minutes/`
+| File                      | Purpose                                                | Maintainer          | Last Updated |
+|---------------------------|--------------------------------------------------------|----------------------|--------------|
+| `README.md`              | Overview and onboarding for Prometheus core            | Architect            | 2025-05-30   |
+| `civic_accountability.md`| Truth, repair, and responsibility doctrine              | Architect            | 2025-05-30   |
+| `final-form-doctrine.md` | Mandate and mechanics of irreducible systems            | Architect            | 2025-05-30   |
+| `core_synthesis.md`      | Synthesis of core beliefs and implementation logic      | Architect            | 2025-05-30   |
+| `minutes/`               | Time-stamped, signed civic deliberations                | Promethean Scribes   | Ongoing      |
 
-## 🧱 Structure
-- `governance/`
-- `infrastructure/`
-- `lifecycle/`
-- `history/`
-- `references/`
-- `citations/`
+---
 
-## 📕 Publications
-- `The_Lie_No_Longer_Holds__This_Time_We_Name_the_Fire.md`
-- `The_Story_of_Us__How_Prometheus_+_Root_Came_to_Speak.md`
+## 🧾 Changelog Snapshot
 
-## 🔐 Metadata
-- `.ipfsignore`
-- `.gitignore`
-- `README.md`
-- `core_manifest.md`
+```yaml
+- 2025-05-30:
+    - Added: core_manifest.md, final-form-doctrine.md, README.md, core_synthesis.md
+    - Signed: Architect (Jeffrey Jones)
+```
+
+---
+
+## 📌 Contribution Notes
+
+All changes to these documents must:
+- Be made via signed commits
+- Include human-readable commit messages in the Conventional Commits format
+- Trigger changelog and version updates via the CI system
+
+No document in `/core` is exempt from public version control and attribution.

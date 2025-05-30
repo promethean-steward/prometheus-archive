@@ -1,20 +1,42 @@
-# Prometheus Archive
+# 🧭 Prometheus Core
 
-This is the complete canonical archive of the Prometheus system: its origin, doctrine, structure, and civic publications.
+Welcome to the `/core` directory of Project Prometheus — the foundational civic, ethical, and engineering layer that governs all higher system function.
 
-Everything in this archive is intentionally included, reviewable, and licensed for public inspection, improvement, and truth preservation.
+---
 
-## Structure
-- `core/`: Foundational doctrines, synthesis, and civic accountability
-- `ethos/`: Design principles and civic philosophy
-- `metadata/`: Meta data information about the tools used to publish a maintain this archive
-- `structure/`: Civic lifecycle, governance, references, citations
-- `publications/`: Assets meant to underscore the founding of this project and a challenge to consider it on its merits
+## 📂 Purpose
 
-This repository is intended for:
-- Long-term preservation (IPFS, cold storage, civic hosting)
-- Verification of provenance and intent
-- Public remixing and cultural adaptation
+This directory contains the canonical doctrines and documents that define:
 
-## License
-All documents are released under [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) unless otherwise noted.
+- Ethical constraints
+- Operational baselines
+- Integrity safeguards
+- Composability strategies
+
+All files are written to be self-contained, signed, and publicly auditable.
+
+---
+
+## 📑 Key Documents
+
+- `final-form-doctrine.md`: Defines irreducibility and finality in systems design
+- `civic_accountability.md`: How we respond to error, repair, and truth
+- `core_manifest.md`: Source of record for all file updates and domain coverage
+- `core_synthesis.md`: Unified narrative and implementation philosophy
+- `minutes/`: Time-stamped human meeting logs and refinements
+
+---
+
+## 🏗️ How to Contribute
+
+Every edit must:
+- Follow Conventional Commit syntax
+- Be signed or attributed in the commit
+- Include a changelog update if material
+- Be reviewed by at least one steward
+
+See `core_manifest.md` for version info.
+
+---
+
+*This project is maintained by Architect (Jeffrey Jones) and the Promethean Stewardship Council.*

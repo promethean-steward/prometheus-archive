@@ -1,7 +1,0 @@
-.git/
-.DS_Store
-Thumbs.db
-.ipynb_checkpoints/
-*.log
-*.tmp
-__pycache__/
