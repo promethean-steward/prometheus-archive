@@ -1,4 +1,4 @@
-name: Deploy /site to GitHub Pages
+name: Deploy / to GitHub Pages
 
 on:
   push:
@@ -11,11 +11,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Deploy /site to gh-pages
+      - name: Deploy / to gh-pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./site
+          publish_dir: ./
           publish_branch: gh-pages
           cname: prometheanstewardship.org
 
