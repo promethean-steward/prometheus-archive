@@ -12,8 +12,7 @@ All materials in this archive are authentic and intentionally published. No furt
 ## Contact
 If urgent and respectful contact is required, please use:
 
-- 📨 Email (signed): code@prometheanstewardship.org  
-- 🐦 Optional (broadcast only): [@PrometheanCodes](https://twitter.com/PrometheanCodes)
+- 📨 Email (signed): code@prometheanstewardship.org
 
 If you’re reading this, you may already know why.
 
