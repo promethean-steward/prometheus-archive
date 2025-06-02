@@ -1,0 +1,31 @@
+project: Prometheus Archive
+version: 1.0.0
+last_completed_phase: 0
+current_phase: 1
+hydration_mode: strict
+
+phase_status:
+  0:
+    name: Initialization
+    completed: true
+    files:
+      - RUNLOG.md
+      - .github/workflows/deploy.yaml
+    started_at: 2025-05-30T00:00:00Z
+
+task_log:
+  - "2025-05-30T00:00Z :: Phase 0 initialized — structure and workflows created."
+
+- milestone: root_milestone_sync_2025-06-01
+  files:
+    - root_milestone_sync_2025-06-01.md
+    - root_milestone_sync_2025-06-01.md.asc
+    - root_milestone_sync_2025-06-01.md.gpg
+    - root_milestone_sync_2025-06-01.sha256
+    - root_milestone_sync_2025-06-01.tar.gz
+    - root_milestone_sync_2025-06-01.tar.gz.asc
+  gpg_fingerprint: 5FF6 C3D9 187A 9A86 9008 AF98 E1E1 1FC2 EA11 E373
+  sha256: [insert value from .sha256 file]
+  verified: true
+  date: 2025-06-01T[time]Z
+
